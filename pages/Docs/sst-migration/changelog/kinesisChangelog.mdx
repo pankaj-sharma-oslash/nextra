@@ -1,0 +1,116 @@
+## KinesisStream Changelog
+
+###### Constructor
+
+    - Moved kinesisStream ⇒ cdk.stream
+
+    ```javascript
+    // from
+    {
+        kinesisStream,
+    }
+    // to
+    {
+        cdk: {
+            stream,
+        },
+    }
+    ```
+
+###### Default Setting
+
+    - Moved defaultFunctionProps ⇒ KinesisStreamProps.defaults.function
+
+    ```javascript
+    // from
+    {
+        defaultFunctionProps: {
+            timeout: 10
+        },
+    }
+    // to
+    {
+        defaults: {
+            function: {
+            timeout: 10
+            },
+        }
+    }
+    ```
+
+###### Consumers
+
+    - Always use full props format
+
+    ```javascript
+    // from
+    consumers: {
+        myConsumer: {
+            handler: "lambda.main",
+            timeout: 10,
+        }
+    }
+
+    // to
+    consumers: {
+        myConsumer: {
+            function: {
+                handler: "lambda.main",
+                timeout: 10,
+            }
+        }
+    }
+    ```
+
+    - Moved consumerProps ⇒ cdk.eventSource
+
+    ```javascript
+    // from
+    {
+        consumerProps: {
+            startingPosition: StartingPosition.LATEST,
+        }
+    }
+    // to
+    {
+        cdk: {
+            eventSource: {
+                startingPosition: StartingPosition.LATEST,
+            },
+        },
+    }
+    ```
+
+###### Properties
+
+    - Moved kinesisStream ⇒ cdk.stream
+
+    ```javascript
+    // from
+    const stream = new KinesisStream(stack, "Stream", { ... });
+    stream.kinesisStream;
+
+    // to
+    const stream = new KinesisStream(stack, "Stream", { ... });
+    stream.cdk.stream;
+    ```
+
+###### functionName
+
+    - In production deployment  we may face an issue like:
+    `kinesis-consumer already exists in stack`
+    
+    - We can fix it by changing the functionName in Kinesis.
+
+    ```javascript
+    // from
+    { 
+      functionName: 'prod-sink-kinesis-consumer' 
+    }
+
+    // to
+    { 
+      functionName: 'production-sink-kinesis-consumer' 
+    }
+    ```
+

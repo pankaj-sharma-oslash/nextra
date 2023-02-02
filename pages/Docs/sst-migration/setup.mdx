@@ -1,0 +1,40 @@
+# SST Migration v0 to v1
+
+### Step 1:
+
+Setup the [Oslash Monorepo](https://github.com/realtimeskills/oslash).
+
+### Step 2:
+
+Install the dependencies from root direcory.
+Use the given command to install.
+
+```
+npm i
+or
+npm install
+```
+
+### Step 3:
+
+Run the following command in the sst project to upgrade it.
+
+```
+npx sst update 1.18.4
+```
+
+Check for the versions of `@serverless-stack/cli` and `@serverless-stack/resources` in project's `package.json`
+Compare the versions with the  root `package.json`
+
+Required version of following in project's `package.json`
+```
+"@serverless-stack/cli" : "1.18.4"
+"@serverless-stack/resources" : "1.18.4"
+"aws-cdk-lib" : "2.50.0"
+```
+
+### Step 4:
+
+For each SST construct used in your app, find its corresponding section in the Changelog below, and follow the steps to update.
+
+

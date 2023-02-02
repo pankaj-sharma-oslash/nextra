@@ -1,0 +1,24 @@
+## getLogRetentionDays
+
+1. In sst project create a file named `getLogRetentionDays.ts` at the location `./src/utils`
+
+2. Now copy the code from `@realtimeskills/core/src/utils/getLogRetentionDays.ts` and paste it into the project `/src/utils/getLogRetentionDays.ts`
+
+3. As the function `getLogRetentionDays` return a number. It is supposed to return a type given in the logs.RetentionDays
+
+   You can check the return type of RetentionDays in `[sst-project]\node_modules\aws-cdk-lib\aws-logs\lib\log-group.d.ts`
+
+###### Example: 
+```javascript
+//from 
+export function getLogRetentionDays () {
+    return appSecrets.appEnv === 'prod' ? 14 : 3
+}
+
+//to
+export function getLogRetentionDays () {
+    return appSecrets.appEnv === 'prod' ? 'two_weeks' : 'three_days'
+}
+```
+
+4. In `index.js` import `getLogRetentionDays` from `../src/utils/getLogRetentionDays` 

@@ -1,0 +1,111 @@
+
+## Cron Changelog
+
+###### Constructor
+
+    - Moved eventsRule ⇒ cdk.rule
+
+    ```javascript
+    // from
+    {
+        eventsRule,
+    }
+    // to
+    {
+        cdk: {
+            rule,
+        },
+    }
+    ```
+
+    - Moved schedule (if type is cdk.events.CronOptions) ⇒ cdk.rule.schedule
+
+    ```javascript
+    // from
+    new Cron(this, "Cron", {
+        schedule: { minute: "0", hour: "4" },
+        job: "src/lambda.main",
+    });
+
+    // to
+    new Cron(this, "Cron", {
+        job: "src/lambda.main",
+        cdk: {
+            rule: {
+                schedule: { minute: "0", hour: "4" },
+            },
+        },
+    });
+    ```
+
+    - Job: moved jobProps ⇒ cdk.target
+
+    ```javascript
+    // from
+
+    new Cron(this, "Cron", {
+        schedule: "rate(1 minute)",
+        job: {
+            function: "src/lambda.main",
+            jobProps: {
+                event: RuleTargetInput.fromObject({
+                    key: "value"
+                }),
+            },
+        },
+        });
+
+    // to
+    new Cron(this, "Cron", {
+        schedule: "rate(1 minute)",
+        job: "src/lambda.main",
+        cdk: {
+            target: {
+                event: RuleTargetInput.fromObject({
+                    key: "value"
+                }),
+            },
+        },
+    });
+    ```
+
+###### Job
+
+    - Always use full props format
+
+    ```javascript
+    // from
+    job: {
+        handler: "lambda.main",
+        timeout: 10,
+        }
+
+    // to
+    job: {
+        function: {
+            handler: "lambda.main",
+            timeout: 10,
+        }
+    }
+    ```
+###### Properties
+
+    - Moved eventsRule ⇒  cdk.rule 
+    ```javascript
+    // from
+    const bus = new EventBus(stack, "Bus", { ... });
+    bus.eventBus;
+
+    // to
+    const bus = new EventBus(stack, "Bus", { ... });
+    bus.cdk.eventBus;
+    ```
+
+    - attachPermissionsToTarget(): 2nd argument type integer ⇒ string (name of the target)
+
+    ```javascript
+    //from
+    bus.attachPermissionsToTarget("myRule", 0, [...]);
+    //to
+    bus.attachPermissionsToTarget("myRule", "myTarget", [...]);
+    ```

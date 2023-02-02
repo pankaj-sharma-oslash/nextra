@@ -1,0 +1,18 @@
+{
+    "index": {
+      "title": "Home",
+      "type": "page"
+    },
+    "Docs": {
+      "title": "Docs",
+      "type": "page"
+    },
+    "about": {
+      "title": "About",
+      "type": "page"
+    },
+    "contact": {
+      "title": "Contact Us",
+      "type": "page"
+    }
+  }

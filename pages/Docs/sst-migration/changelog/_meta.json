@@ -1,0 +1,7 @@
+{
+    "cronChangelog": "Cron Changelog",
+    "kinesisChangelog": "Kinesis Changelog",
+    "getLogRetentionDays": "getLogRetentionDays",
+    "functionChangelog": "Function Changelog"
+
+}
