@@ -1,4 +1,7 @@
 {
-    "sst-migration": "SST Migration v0 to v1",
-    "input-widget": "Studying input widget"
+  "index": "Setting up the mono repo",
+  "sst-migration": "SST Migration v0 to v1",
+  "launcher": "Study Launcher",
+  "popup": "Popup",
+  "input-widget": "Input widget"
 }

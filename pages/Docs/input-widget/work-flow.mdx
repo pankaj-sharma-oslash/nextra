@@ -1,0 +1,27 @@
+# Technical Workflow of the Input widget
+
+#### The Input-Widget works in the following way:
+
+
+  - __Event Listener:__ An event listener is attached to the keyboard event in the browser. It listens for the specific keyboard shortcut, "o/".
+
+  - __Keypress Detection:__ When the user types "o/", the event listener detects the keypress and triggers the next step in the workflow.
+
+  - __Micro-frontend Router:__ The micro-frontend router receives the trigger from the event listener and loads the appropriate micro-frontend application into a input-widget window in the browser.
+
+  - __Input-Widget Window:__ The micro-frontend application is displayed in a input-widget window in the browser, allowing the user to interact with it like scrolling and selecting the oslash shortcuts.
+
+  - __Shortcut List:__ The pop-up window displays a list of all oslash shortcuts, and the list is updated in real-time as the user types further text.
+
+  - __Shortcut Ranking:__ The oslash shortcuts are ranked based on the user's text input, making it easier for the user to find the desired shortcut.
+
+  - __Service Worker:__ The micro-frontend application uses a service worker to cache the shortcuts and provide offline functionality. The service worker ensures that the user can access the shortcuts even when the internet connection is lost.
+
+  - __IndexedDB:__ The micro-frontend application uses an indexedDB to persist the shortcuts data, allowing it to be accessed even after the input-widget window is closed.
+
+
+
+
+
+
+

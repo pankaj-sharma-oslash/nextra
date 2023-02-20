@@ -1,0 +1,47 @@
+# Setting up Popup project 
+
+#### Step 1
+Set up the [Oslash Monorepo](/Docs/)
+
+**You have successfully setup the monorepo now you can start working on popup**
+
+#### Step 2
+
+Once you have installed all the required modules, You need to run the following command
+
+```npm run codegen``` 
+
+
+This command will generate all the **_graphql typings_** required to make queries
+
+> **_NOTE:_**  In order to finish the setup completely you need to have env variables for the project, along with it you need to have wrangler access 
+
+:white_check_mark: You have successfully setup the project
+
+---
+
+# Executing the project
+
+    1. In order to start the project on localhost run the following command
+
+        ```npm run start``` -
+        This command will start a development server, usually on _localhost:3000_
+
+        ```npm run dev``` - This command will build the service worker and astro project and then start the server
+
+        > **Note:** build servicer command will run the _build-service-worker.js_ script present inside ```scripts/build-service-worker.js```, this script makes use of esbuild tool to convert the ts file to js file so that it can be used by the ServiceWorker.tsx file
+
+    2. To build the popup for statging run the following command
+
+        ```npm run build:popup```
+
+    3. To deploy the application to cloudflare pages run the following command
+
+        ```npm run deploy```
+
+        > **Note:** In order to deploy the page to cloudflare, one must have cloudflare access
+
+
+
+
+

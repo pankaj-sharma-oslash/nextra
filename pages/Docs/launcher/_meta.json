@@ -1,0 +1,6 @@
+{
+  "layout": "Launcher Layout",
+  "service-workers": "Service Workers",
+  "setup": "Launcher Setup",
+  "caches": "Launcher Cache"
+}

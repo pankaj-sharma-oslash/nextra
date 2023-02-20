@@ -1,0 +1,22 @@
+# Overview of the popup project
+
+Popup project is present in it's own domain - https://popup.oslash.com, but for the sake of sync in the overall application, we use reverse proxy to access the popup via this url - https://home.oslash.com/popup
+
+## Astro
+
+Popup project is completely built using **[Astro - Build faster websites](https://astro.build)**. Since we are using astro, the pages are rendered on the server and sent as plain HTML to the client and astro follows a routing system similiar to _NextJS_ i.e directory based routing system.
+Most importantly astro is **framework agnostic** meaning we can use different frameworks for different pages.
+
+## Service worker
+
+Popup makes use of service worker, which is registered with the scope - ```/popup```, so any fetch request containing the url ```popup/*``` will be intercepted by the service worker. Inside the ```/frontend/popup/service-worker/
+service-worker.ts``` file we are caching the static assets during the install phase of the service worker. Once the service worker is registered and active it will start intercepting the request.
+
+## IndexDB
+
+Popup extensivly makes use of the data present in IndexDB, popuplation of the indexDB is handled by the home-tab (_feature-home/extension_``). For more details on how to work with the indexDB refer [here](/Docs/popup/indexDB)
+
+## Nano-stores
+
+Astro has a storage mechanism called nano-store which is used to store small data, this store can be accessed by different pages and components and acts as a mean of communication between different components and pages.
+[For more reference](/Docs/popup/nano-store)

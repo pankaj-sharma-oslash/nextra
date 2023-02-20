@@ -1,0 +1,50 @@
+### IndexedDB
+IndexedDB is a way for you to persistently store data inside a user's browser. Because it lets you create web applications with rich query abilities regardless of network availability, your applications can work both online and offline.
+
+### Fetching Cache
+We are using IndexedDB to fetch the cache from the database and  store it.
+If token doesn't exist in the cache we refetch from the API and store it.
+
+- __Fetching the cache from the database__
+```typescript
+export const cacheFetch = async (request: Request, event: FetchEvent): Promise<Response> => {
+  let authToken = getAuthToken()
+  if (!authToken) {
+    await fetchAndSetToken()
+    authToken = getAuthToken()
+  }
+
+  const { query, variables } = await parseRequest(request)
+
+  return await new Promise((resolve, reject) => {
+    const { operationType, operationName } = parseQuery(query)
+
+    if (operationType === 'query') {
+      switch (operationName) {
+        case 'queryShortcutsV2': {
+          const query = variables.query as string
+          const workspacePK = variables.workspacePK as string
+          resolve(getShortcutsHandler({ query, workspacePK, request }))
+          return
+        }
+      }
+      client[operationType](query, variables, {
+        requestPolicy: 'cache-and-network',
+        fetchOptions: {
+          headers: {
+            Authorization: authToken as string
+          }
+        }
+      }).toPromise().then(({ data, error }) => {
+        if (data) {
+          resolve(new Response(JSON.stringify({ data, errors: error?.graphQLErrors }), {
+            status: 200
+          }))
+        } else {
+          resolve(graphqlFetch(request, event))
+        }
+      }).catch(reject)
+    }
+  })
+}
+```

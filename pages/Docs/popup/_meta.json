@@ -1,0 +1,7 @@
+{
+    "setup-exec": "Setup & Execution",
+    "overview": "Overview",
+    "structure-flow": "Structure and flow",
+    "indexDB": "Working with IndexDB",
+    "nano-store": "Nano Stores in Astro"
+}

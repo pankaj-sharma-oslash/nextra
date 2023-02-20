@@ -1,0 +1,56 @@
+# Nano stores
+
+Nano stores are client side storage mechanism provided by Astro. The Nano Stores library allows you to author stores that any component can interact with.
+We use nano store because
+1. **They’re lightweight.** Nano Stores ship the bare minimum JS you’ll need (less than 1 KB) with zero dependencies.
+2. **They’re framework-agnostic.** This means sharing state between frameworks will be seamless! Astro is built on flexibility, so we love solutions that offer a similar developer experience no matter your preference.
+
+To use nanostores enter the following command in your terminal
+
+```npm install nanostores```
+
+There are many ways of creating nano stores, but in the popup we have used **Map**
+
+### Map
+
+Map store can be used to store objects and change keys in this object.
+
+To create map store call ```map(initial)``` function with initial object.
+
+```typescript
+import { map } from 'nanostores'
+
+export const profile = map({
+  name: 'anonymous'
+})
+```
+
+In TypeScript, you can optionally pass value type as type parameter.
+
+```typescript
+export interface ProfileValue {
+  name: string,
+  email?: string
+}
+
+export const profile = map<ProfileValue>({
+  name: 'anonymous'
+})
+```
+
+```store.set(object)``` or 
+```store.setKey(key, value) ```  methods will change the store.
+
+```typescript
+profile.setKey('name', 'Kazimir Malevich')
+```
+
+Store’s listeners will receive second argument with changed key.
+
+```typescript
+profile.listen((value, changed) => {
+  console.log(`${changed} new value ${value[changed]}`)
+})
+```
+
+For more details about other types of nano-stores refer this link https://github.com/nanostores/nanostores

@@ -1,0 +1,144 @@
+# Launcher Layout
+We have mainly four components in  our Launcher
+1. __SearchBar__
+2. __TabsMenu__
+3. __Lists__
+4. __Footer__
+
+## SearchBar
+It is mainly responsible for searching the Shortcuts, Snippets and others.
+- __Implimentation of SearchBar__
+```typescript
+export const SearchBar: ForwardRefExoticComponent<
+SearchBarProps & RefAttributes<HTMLInputElement>
+> = forwardRef(
+  (
+    {
+      placeholder,
+      onChange
+    }: SearchBarProps,
+    inputRef
+  ) => {
+    return (
+      <div
+        className="h-[3.375rem] relative flex items-center bg-white rounded-t-xl shadow-bottom-solid px-2 py-3"
+      >
+        <input
+          className="w-full h-full text-gray-900 text-lg font-normal focus:outline-none bg-transparent px-3 z-10"
+          autoComplete="off"
+          name="search"
+          placeholder={placeholder}
+          ref={inputRef}
+          onChange={onChange}
+        />
+      </div>
+    )
+  }
+)
+```
+## TabsMenu
+It contains all the __Tabs__ through which we can access all the details that comes under that tab or label.
+- __Implimentation of TabsMenu__
+```typescript
+export const TabsMenu: React.FC<TabsMenuProps> = ({
+  currentTabIndex,
+  onTabChange
+}: TabsMenuProps) => {
+  return (
+    <div>
+      <nav
+        className="flex w-full h-10 bg-white px-4 py-2 space-x-3 overflow-x-auto hide-scroll-bar-chrome hide-scroll-bar-firefox os-host-scrollbar-horizontal-hidden"
+        aria-label="Tabs"
+      >
+        {TABS.map((tab, i) => {
+          return (
+            <button
+              onClick={() => {
+                onTabChange(i)
+              }}
+              type="button"
+              key={tab}
+              className={`px-2 py-1 text-xs font-normal rounded-[4px] leading-snug focus:outline-none transition-colors truncate max-w-20 flex-shrink-0 ${
+                currentTabIndex === i
+                  ? 'bg-gray-100 text-gray-500'
+                    : 'text-gray-500 hover:text-gray-400'
+              }`}
+            >
+              {tab}
+            </button>
+          )
+        })}
+      </nav>
+      <div className="h-px block bg-gray-100 mx-4" />
+    </div>
+  )
+}
+```
+## Lists
+It is the space where all the Shortcuts, Snippets and others will be displayed.
+
+- __Implimentation of Lists__
+```typescript
+const List = (): ReactElement => {
+    const tabName = TABS[currentTabIndex]
+    switch (tabName) {
+      case 'Shortcuts':
+        return <ShortcutList query={query} />
+      case 'Snippets':
+        return <SnippetList query={query} />
+      case 'Collections':
+        return <CollectionList query={query} />
+      case 'Applications':
+        return <ApplicationList query={query} />
+      case 'Files':
+        return <FileList query={query}/>
+      default:
+        return <AllItemList query={query} />
+    }
+  }
+```
+## Footer
+It contains the details of the user that is using or logged in and the logo of __OSlash__.
+
+- __Implimentation of Footer__
+```typescript
+export const Footer: React.FC<FooterProps> = ({
+  userEmail
+}: FooterProps) => {
+  return (
+    <div className='w-full flex items-center rounded-b-xl rounded-t-none h-8 px-4 py-2 shadow-top-solid bg-white justify-between'>
+      <div className="inline-flex items-center space-x-1">
+        <span className="inline-flex relative h-2 w-2 ">
+          <span className={'animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75'} />
+          <span className={'relative inline-flex rounded-full h-2 w-2 bg-emerald-500'} />
+        </span>
+        <Text color="secondary" textSize="xs">
+          Ready to search
+        </Text>
+      </div>
+
+      <div className="inline-flex items-center gap-1.5">
+        <span className="inline-flex lowercase">
+          <Text color="secondary" textSize="xs">
+            {userEmail}
+          </Text>
+        </span>
+
+        <button
+          type='button'
+          className="w-5 h-5 inline-flex items-center justify-center rounded hover:bg-gray-100 focus:outline-none"
+          onClick={() => {
+            const url = `https://app.oslash.${
+              import.meta.env.PUBLIC_WORKER_ENV === 'production' ? 'com' : 'work'
+            }/`
+            window.open(url, '_blank')
+          }}
+        >
+          <span className="sr-only">OSlash Dashboard</span>
+            <OSlashBrand className="w-4 h-4 text-gray-500" />
+        </button>
+      </div>
+    </div>
+  )
+}
+```

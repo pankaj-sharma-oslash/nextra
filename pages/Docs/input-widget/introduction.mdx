@@ -1,0 +1,27 @@
+# Introduction
+
+The [input-widget](https://home.oslash.com/input-widget) project is a solution for displaying list of oslash shortcuts in a window. The project uses Astro, a service worker, and an indexedDB to persist the data even when the user goes offline. The goal of this documentation is to provide a clear understanding of the input-widget project, its components, and how it works.
+
+# Technical Details
+
+The input-widget project consists of four main components:
+
+1. Astro(Micro-frontend):
+
+  This component is responsible for creating a micro-frontend environment where different components of the application can be deployed independently. It helps to reduce the complexity of the application and make it easier to manage.
+
+2. Service Worker:
+
+  This component provides offline functionality by caching the data when the user goes offline. The service worker ensures that the application can continue to display the keyboard shortcuts even when the user has no internet connection.
+
+3. IndexedDB:
+
+  This component is used to store the keyboard shortcuts data persistently in the browser. The indexedDB is used to store the data even after the user has gone offline and has lost the internet connection.
+
+4. Nanostores:
+
+  The input-widget project uses nanostores to manage the local storage. Nanostores provide a simple and efficient way to manage state on the client and server side.
+
+# Usage:
+
+To use the micro-frontend window pop-up, simply type "o/" in the browser. The pop-up window will appear with the list of all oslash shortcuts, ranked based on the user's input text

@@ -1,0 +1,96 @@
+# Service Workers
+Service workers are specialized JavaScript assets that act as proxies between web browsers and web servers. They aim to improve reliability by providing offline access, as well as boost page performance.
+
+## Registering a Service Workers
+Before a service worker takes control of your page, it must be registered.That means the first time a user comes, network requests will go directly to your server because the service worker is not yet in control of your pages.
+```javascript
+export const ServiceWorker: FC = () => {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/launcher/service-worker.js', { scope: '/launcher' }).catch(() => {})
+    }
+  }, [])
+
+  return null
+}
+```
+
+## Verifying if a service workers is registered
+To verify if a service worker is registered, use developer tools in your web browser
+
+1. Open developer tools, then click __Application__ tab.
+2. In the left pane, select __Service Workers__.
+3. Check that the service worker's script URL appears with the status "Activated".
+
+## Installing a Service workers
+A service worker fires its `install` event after registration. `install` is only called once per service worker, and won't fire again until it's updated. A callback for the `install` event can be registered in the worker's scope with `addEventListener`:
+
+```typescript
+const handleInstall = async (): Promise<void> => {
+  void self.skipWaiting()
+  await cache.cacheStaticAssets()
+  console.debug(`Installed service worker v${version}`)
+}
+
+self.addEventListener('install', (event) => event.waitUntil(handleInstall()))
+```
+
+## Activation of Service Workers
+After a successful installation, the service worker activates. This doesn't have much of a distinct use the first time your service worker is installed/activated, but it means more when the service worker is updated.
+```typescript
+const handleActivate = async (): Promise<void> => {
+  await self.clients.claim()
+  await cache.invalidatePreviousCache()
+  console.debug(`Activated service worker v${version}`)
+}
+
+self.addEventListener('activate', (event) => event.waitUntil(handleActivate()))
+```
+
+## Custom responses to requests
+By this point we've got our site assets cached, we need to tell service workers to do something with the cached content. This is done with the `fetch` event.
+
+1. A `fetch` event fires every time any resource controlled by a service worker is fetched, which includes the documents inside the specified scope, and any resources referenced in those documents.
+
+2. You can attach a `fetch` event listener to the service worker, then call the `respondWith()` method on the event to hijack our HTTP responses and update them with your own content.
+```typescript
+const handleFetch = (event: FetchEvent): void => {
+  const request = event.request.clone()
+  const { origin, pathname, searchParams } = new URL(request.url)
+  const operationName = searchParams.get('operationName') ?? ''
+
+  if (self.location.origin === origin) {
+    if (pathname === '/launcher/graphql' && supportedOperations.has(operationName)) {
+      event.respondWith(cacheFetch(request, event))
+    } else {
+      event.respondWith(cache.get(event))
+    }
+  }
+}
+
+self.addEventListener('fetch', handleFetch)
+```
+
+## Build a service workers
+For our purpose we create a service worker that takes Static Assets.
+
+```javascript
+esbuild.build({
+  target: 'es2020',
+  platform: 'browser',
+  entryPoints: ['./src/service-worker/service-worker.ts'],
+  outfile: 'dist/static/service-worker.js',
+  allowOverwrite: true,
+  format: 'esm',
+  bundle: true,
+  define: {
+    'process.env.STATIC_ASSETS': JSON.stringify(STATIC_ASSETS.map(file => `/launcher${file}`)),
+    'process.env.SW_VERSION': JSON.stringify(dayjs().format('YYYY-MM-DD')),
+    'process.env.GATEWAY_URL': JSON.stringify(process.env.GATEWAY_URL),
+    'process.env.CLOUDFRONT_URL': JSON.stringify('')
+  },
+  minify: true
+}).then(() => {
+
+})
+```

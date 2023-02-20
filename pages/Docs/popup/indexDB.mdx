@@ -1,0 +1,170 @@
+# IndexDB
+
+IndexedDB is a client-side NoSQL database for web applications. It provides a way for web applications to store large amounts of structured data on the client side, so that the data can be accessed and manipulated even if the user is offline.
+
+**IndexedDB adheres to a same-origin policy.** - An origin is the domain, application layer protocol, and port of a URL of the document where the script is being executed. 
+Each origin has its own associated set of databases. Every database has a name that identifies it within an origin. 
+The security boundary imposed on IndexedDB prevents applications from accessing data with a different origin. 
+For example, while an app or a page in http://www.example.com/app/ can retrieve data from http://www.example.com/dir/, because they have the same origin, 
+it cannot retrieve data from http://www.example.com:8080/dir/ (different port) or https://www.example.com/dir/ (different protocol), because they have different origins.
+
+To use IndexedDB, you need to create an instance of an IndexedDB database and then perform CRUD (Create, Read, Update, Delete) operations on the data using the database's APIs.
+
+To create an instance of an IndexedDB database, you need to use the open() method of the indexedDB object. This method takes two arguments: the name of the database and its version number.   
+
+```typescript
+const request = window.indexedDB.open("MyTestDatabase", 1);
+```
+
+#### Populating IndexDB
+
+Once the instance of indexDB is created we need to populate the db with some data. To populate data into an IndexedDB database, you first need to create a transaction, and then use the add() method to add the data to the object store.
+Here's an example that populates an IndexedDB database with snippet data:
+
+```typescript
+// Create the database or upgrade it if it already exists
+request.onupgradeneeded = (event) => {
+  const db = event.target.result;
+  
+  // Create an object store to hold information about snippets.
+  const objectStore = db.createObjectStore("snippet", { keyPath: "id" });
+  
+  // Create an index to search snippet by their name.
+  objectStore.createIndex("snippet-name", "name", { unique: false });
+};
+
+// Populate data into the database
+request.onsuccess = (event) => {
+  const db = event.target.result;
+  
+  const transaction = db.transaction(["snippet"], "readwrite");
+  const objectStore = transaction.objectStore("customers");
+  
+  const customerData = [
+    { id: "1", name: "test-snip-1", text: "This is test snippet 1" },
+    { id: "2", name: "test-snip-2", text: "This is test snippet 1" }
+  ];
+  
+  customerData.forEach(customer => {
+    objectStore.add(customer);
+  });
+};
+```
+
+---
+
+**To perform any transaction on the indexDB the following steps must be carried out before executing the transaction like (read, write, update)**
+
+1. Open a database connection: Use the indexedDB.open method to open a connection to the database and create a database object store if it doesn't already exist.
+
+2. Start a transaction: Use the transaction method on the database object to start a transaction and specify the mode (e.g. 'readonly' or 'readwrite').
+
+3. Get an object store: Use the objectStore method on the transaction to get a reference to the object store you want to perform transaction on.
+
+---
+
+
+#### Reading data from indexDB
+
+To read data from an IndexedDB database, we have to follow the following steps:
+
+1. Retrieve data: Use methods like get or getAll on the object store to retrieve data based on the key or an index.
+
+2. Handle the result: The result is returned asynchronously via a callback function, which can access the result data.
+
+```typescript
+const request = indexedDB.open("oslash", 1);
+request.onsuccess = (event) => {
+  const db = event.target.result;
+  const transaction = db.transaction("snippet", "readonly");
+  const objectStore = transaction.objectStore("snippet");
+  const request = objectStore.get("snip-name");
+  request.onsuccess = (event) => {
+    console.log(event.target.result);
+  };
+};
+```
+
+In this example, the first line opens a connection to the database named "oslash". The onsuccess event handler is called when the connection is successfully opened, and it retrieves the database object.
+
+Next, a transaction is started with the transaction method on the database object and the mode is set to "readonly".
+
+Then, the object store named "snippet" is retrieved with the objectStore method on the transaction.
+
+Finally, the data is retrieved using the get method on the object store and passing in the key value "snip-name". The result is returned asynchronously via a callback function in the onsuccess event handler.
+
+---
+
+
+#### Writing data into indexDB
+
+To write data to an IndexedDB database, you can follow these steps:
+
+1. Add or update data: Use methods like put or add on the object store to add or update data. The put method updates an existing entry, while the add method adds a new entry.
+
+2. Handle the result: The result is returned asynchronously via a callback function, which can access the result data.
+
+```typescript
+const request = indexedDB.open("oslash", 1);
+request.onsuccess = (event) => {
+  const db = event.target.result;
+  const transaction = db.transaction("snippet", "readwrite");
+  const objectStore = transaction.objectStore("snippet");
+  const request = objectStore.put({ key: "1", value: "test-snip-3" });
+  request.onsuccess = (event) => {
+    console.log("Data written successfully.");
+  };
+};
+```
+
+In this example, the first line opens a connection to the database named "oslash". The onsuccess event handler is called when the connection is successfully opened, and it retrieves the database object.
+
+Next, a transaction is started with the transaction method on the database object and the mode is set to "readwrite".
+
+Then, the object store named "snippet" is retrieved with the objectStore method on the transaction.
+
+Finally, the data is written using the put method on the object store and passing in an object with the key-value pair to be stored. The result is returned asynchronously via a callback function in the onsuccess event handler.
+
+---
+
+#### Updating data in IndexDB
+
+To update data in an IndexedDB database, you can use the put method on the object store. The put method updates an existing entry or adds a new entry if the key doesn't exist.
+
+```typescript
+const request = indexedDB.open("oslash", 1);
+request.onsuccess = (event) => {
+  const db = event.target.result;
+  const transaction = db.transaction("snippet", "readwrite");
+  const objectStore = transaction.objectStore("snippet");
+  const request = objectStore.put({ key: "1", value: "test-snip-4" });
+  request.onsuccess = (event) => {
+    console.log("Data updated successfully.");
+  };
+};
+```
+In this example, the first line opens a connection to the database named "oslash". The onsuccess event handler is called when the connection is successfully opened, and it retrieves the database object.
+
+Next, a transaction is started with the transaction method on the database object and the mode is set to "readwrite".
+
+Then, the object store named "snippet" is retrieved with the objectStore method on the transaction.
+
+Finally, the data is updated using the put method on the object store and passing in an object with the key-value pair to be stored. The result is returned asynchronously via a callback function in the onsuccess event handler.
+
+---
+
+#### Deleting data from indexDB
+
+To delete data from IndexedDB use the following code piece
+
+```typescript
+request.onsuccess = (event) => {
+    const db = event.target.result;
+    const transaction = db.transaction(["snippet"], "readwrite");
+    const objectStore = transaction.objectStore("snippet");
+    const objectStoreRequest = objectStore.delete(1);
+};
+request.onerror = (event) => {
+    console.log("Error deleting data from database.", event);
+};
+```

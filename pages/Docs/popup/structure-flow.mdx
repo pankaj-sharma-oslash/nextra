@@ -1,0 +1,32 @@
+# Structure and flow of the code
+
+#### Layout based design
+Popup project follows a layout based structure, where layouts are wrappers that appear in each page of the project. 
+    - Zaraz is one of the layout component which is present inside the folder ```popup/src/layout```.
+    - Zaraz is used to manage third party libraries efficiently
+        - Zaraz itself contains 3 more components in it which are - _ZeroMetricsLogger.tsx_, _HydrateStore.tsx_ and _ServiceWorker.tsx_ 
+
+        - **ZeroMetricsLogger.tsx** is used to set up logging from the client side
+        - **HydrateStore** is used to populate the nano store, so that other components can access the data present inside the nano store
+        - **ServiceWorker** component is used to register the service-worker for the popup project
+---
+
+Since popup is built upon astro, the first page that is displayed to the screen, when we start the application, is the **index.astro** present inside ```popup/src/pages/index.astro```. And _index.astro_ calls the _link.astro_ file (which renders the _NewShortcut.tsx_ file) - so shorcut page will displayed when we run the application
+
+> **Note:** to start the application for development run the following command ```npm run start```
+
+snippet page can be accessed by going to this path - [```/snippet```](https://home.oslash.com/popup/snippet). If the user is not logged in he will be redirected to ```/login``` and on successful login he will be redirected to the index page
+
+As soon as the project is served by the server, we check for the availability of shortcuts, this is handled by the component - **ShortcutAvailability.tsx** 
+
+In both the _NewShortcut.tsx_ and _NewSnippet.tsx_ we are fetching details such as **getUserDetails**, **getCollection**, **getTagsList**, which are required by the popup page
+
+Once the user has filled the shortcut/snippet form and they click on create, 
+a graphql query will get instantiated, along with that the newly created shortcut/snippet will be stored in [indexDB](/Docs/popup/indexDB) for **faster access**, 
+so that user need not wait for the graphql query to complete and then start using the newly created shortcut/snippet, 
+instead as soon as they hit the create button, the shortcut will be stored in the indexDB, 
+and if the user wishes to use the newly created shortcut immediately they can do so - as the data is present in the indexDB, 
+this will provide a _real-time experience_ to the user.
+
+
+
